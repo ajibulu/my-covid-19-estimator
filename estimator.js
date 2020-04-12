@@ -19,7 +19,7 @@ const covid19ImpactEstimator = (data) => {
     },
     reportedCases: input,
     timeToElapse:  input,
-    totalHospitalBeds: input,
+    totalHospitalBeds: input
     }
   //********************Computation of Estimate
  var numberOfDays,numberOfWeeks,numberOfMonths;
@@ -30,28 +30,29 @@ const covid19ImpactEstimator = (data) => {
  factorDay=Math.trunc(numberOfDays/3);
  factorWeek=Math.trunc(convertWeeksToDays/3);
  factorMonth=Math.trunc(convertMonthsToDays/3);
+
  switch (periodType){
    case 'days':
     twoPowerFactor=Math.pow(2,factorDay);
     impact.currentlyInfected=(reportedCases*numberOfDays)*10;
     severeImpact.currentlyInfected=(reportedCases*numberOfDays)*50;
+    impact.infectionsByRequestedTime=impact.currentlyInfected*twoPowerFactor;
     break;
    case 'weeks':
     twoPowerFactor=Math.pow(2,factorWeek);
     impact.currentlyInfected=(reportedCases*convertWeeksToDays)*10;
     severeImpact.currentlyInfected=(reportedCases*convertWeeksToDays)*50;
+    impact.infectionsByRequestedTime=impact.currentlyInfected*twoPowerFactor;
+    severeImpact.infectionsByRequestedTime=severeImpact.currentlyInfected*twoPowerFactor;
     break;
    case 'months':
     twoPowerFactor=Math.pow(2,factorMonth);
     impact.currentlyInfected=(reportedCases*convertMonthsToDays)*10;
     severeImpact.currentlyInfected=(reportedCases*convertedMonthsToDays)*50;
+    impact.infectionsByRequestedTime=impact.currentlyInfected*twoPowerFactor;
+    severeImpact.infectionsByRequestedTime=severeImpact.currentlyInfected*twoPowerFactor;
     break;
-
  }
- //impact.currentlyInfected=reportedCases*10;
-// severeImpact.currentlyInfected=reportedCases*50;
- impact.infectionsByRequestedTime=impact.currentlyInfected*twoPowerFactor;
- severeImpact.infectionsByRequestedTime=severeImpact.currentlyInfected*twoPowerFactor;
 
  
 
