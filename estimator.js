@@ -1,19 +1,18 @@
 const covid19ImpactEstimator = (data) => {
   const input = data;
-      impact: {
-      currentlyInfected: input,
-      infectionsByRequestedTime: input,
-    periodType: input,
-    numberOfDays:input,
-    numberOfWeeks:input,
-    numberOfMonths:input,
-    population: input,
+  {
+    impact: {
+         currentlyInfected: input,
+         infectionsByRequestedTime: input,
+    
+         periodType: input,
+         population: input,
     region: {
       avgAge: input,
       avgDailyIncomeInUSD: input,
       avgDailyIncomePopulation: input,
       name: input,
-    };
+    },
     severeImpact: {
       currentlyInfected:  input,
       infectionsByRequestedTime: input,
@@ -21,13 +20,9 @@ const covid19ImpactEstimator = (data) => {
     reportedCases: input,
     timeToElapse:  input,
     totalHospitalBeds: input
-
     }
- 
-  
- //********************Computation of Estimate
- 
- //challenge 1
+  //********************Computation of Estimate
+ var numberOfDays,numberOfWeeks,numberOfMonths;
  var convertWeeksToDays,convertMonthsToDays,factorDay,factorWeek,factorMonth;
  const twoPowerFactor,hospitalbedsByRequestedTime,availableBeds,casesForICUByRequestedTime,casesForVentilatorsByRequestedTime;dollarsInFlight; 
  convertWeeksToDay=numberOfWeeks*7;
@@ -36,26 +31,26 @@ const covid19ImpactEstimator = (data) => {
  factorWeek=Math.trunc(convertWeeksToDays/3);
  factorMonth=Math.trunc(convertMonthsToDays/3);
 
- impact.currentlyInfected=reportedCases*10;
- severeImpact.currentlyInfected=reportedCases*50;
- //Period Type
-
- switch (periodType){
-   case "days":
+ //switch (periodType){
+   if (periodType=="days") {
     twoPowerFactor=Math.pow(2,factorDay);
-    break;
-   case "weeks":
+    impact.currentlyInfected=(reportedCases*numberOfDays)*10;
+    severeImpact.currentlyInfected=(reportedCases*numberOfDays)*50;
+    impact.infectionsByRequestedTime=impact.currentlyInfected*twoPowerFactor;
+   } else if (periodType=="weeks") {
     twoPowerFactor=Math.pow(2,factorWeek);
-    break;
-   case "months":
-    twoPowerFactor=Math.pow(2,factorMonth);
-    break;
-
+    impact.currentlyInfected=(reportedCases*convertWeeksToDays)*10;
+    severeImpact.currentlyInfected=(reportedCases*convertWeeksToDays)*50;
+    impact.infectionsByRequestedTime=impact.currentlyInfected*twoPowerFactor;
+    severeImpact.infectionsByRequestedTime=severeImpact.currentlyInfected*twoPowerFactor;
+   
+   } else if (periodType=="month") {
+       twoPowerFactor=Math.pow(2,factorMonth);
+    impact.currentlyInfected=(reportedCases*convertMonthsToDays)*10;
+    severeImpact.currentlyInfected=(reportedCases*convertedMonthsToDays)*50;
+    impact.infectionsByRequestedTime=impact.currentlyInfected*twoPowerFactor;
+    severeImpact.infectionsByRequestedTime=severeImpact.currentlyInfected*twoPowerFactor;
  }
- impact.infectionsByRequestedTime=impact.currentlyInfected*twoPowerFactor;
- severeImpact.infectionsByRequestedTime=severeImpact.currentlyInfected*twoPowerFactor;
-
- 
 
  //Challenge 2
  severeCasesByRequestedTime=severeImpact.infectionsByRequestedTime*0.15;
