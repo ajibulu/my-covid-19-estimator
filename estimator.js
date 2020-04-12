@@ -3,26 +3,25 @@ const covid19ImpactEstimator = (data) => {
   {
     impact: {
          currentlyInfected: input,
-         infectionsByRequestedTime: input
+         infectionsByRequestedTime: input,
+    
+         periodType: input,
+         population: input,
     region: {
       avgAge: input,
       avgDailyIncomeInUSD: input,
       avgDailyIncomePopulation: input,
-      name: input
+      name: input,
     },
     severeImpact: {
       currentlyInfected:  input,
       infectionsByRequestedTime: input,
     },
-    periodType: input,
-    population: input,
     reportedCases: input,
     timeToElapse:  input,
-    totalHospitalBeds: input
+    totalHospitalBeds: input,
     }
-   
-  
- //********************Computation of Estimate
+  //********************Computation of Estimate
  var numberOfDays,numberOfWeeks,numberOfMonths;
  var convertWeeksToDays,convertMonthsToDays,factorDay,factorWeek,factorMonth;
  const twoPowerFactor,hospitalbedsByRequestedTime,availableBeds,casesForICUByRequestedTime,casesForVentilatorsByRequestedTime;dollarsInFlight; 
@@ -31,9 +30,6 @@ const covid19ImpactEstimator = (data) => {
  factorDay=Math.trunc(numberOfDays/3);
  factorWeek=Math.trunc(convertWeeksToDays/3);
  factorMonth=Math.trunc(convertMonthsToDays/3);
- //impact.currentlyInfected=reportedCases*10;
- severeImpact.currentlyInfected=reportedCases*50;
- //Period Type
  switch (periodType){
    case 'days':
     twoPowerFactor=Math.pow(2,factorDay);
