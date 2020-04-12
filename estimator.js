@@ -1,84 +1,93 @@
-const covid19ImpactEstimator = (data) => {
-  const input = data;
-  {
-    impact: {
-         currentlyInfected: input,
-         infectionsByRequestedTime: input,
-    
-         periodType: input,
-         population: input,
-    region: {
-      avgAge: input,
-      avgDailyIncomeInUSD: input,
-      avgDailyIncomePopulation: input,
-      name: input,
-    },
-    severeImpact: {
-      currentlyInfected:  input,
-      infectionsByRequestedTime: input,
-    },
-    reportedCases: input,
-    timeToElapse:  input,
-    totalHospitalBeds: input
-    }
+const covid19ImpactEstimator = (data) => data
+const input = {
+region: {
+  name: 'Africa',
+  avgAge: 19.7,
+  avgDailyIncomeInUSD: 5,
+  avgDailyIncomePopulation: 0.71,
+},
+periodType: 'days',
+population: 58,
+reportedCases: 674,
+timeToElapse:  66622705,
+totalHospitalBeds: 1380614
+};
+
   //********************Computation of Estimate
- var numberOfDays,numberOfWeeks,numberOfMonths;
- var convertWeeksToDays,convertMonthsToDays,factorDay,factorWeek,factorMonth;
- const twoPowerFactor,hospitalbedsByRequestedTime,availableBeds,casesForICUByRequestedTime,casesForVentilatorsByRequestedTime;dollarsInFlight; 
- convertWeeksToDay=numberOfWeeks*7;
- convertMonthsToDays=numberOfMonths*30;
- factorDay=Math.trunc(numberOfDays/3);
- factorWeek=Math.trunc(convertWeeksToDays/3);
- factorMonth=Math.trunc(convertMonthsToDays/3);
+ const elapsedTime,factors,twoPowerFactor,availableBeds,casesForICUByRequestedTime,casesForVentilatorsByRequestedTime;dollarsInFlight; 
+ elapsedTime=input.timeToElapse;
 
- switch (periodType){
-   case 'days':
-    twoPowerFactor=Math.pow(2,factorDay);
-    impact.currentlyInfected=(reportedCases*numberOfDays)*10;
-    severeImpact.currentlyInfected=(reportedCases*numberOfDays)*50;
-    impact.infectionsByRequestedTime=impact.currentlyInfected*twoPowerFactor;
-    break;
-   case 'weeks':
-    twoPowerFactor=Math.pow(2,factorWeek);
-    impact.currentlyInfected=(reportedCases*convertWeeksToDays)*10;
-    severeImpact.currentlyInfected=(reportedCases*convertWeeksToDays)*50;
-    impact.infectionsByRequestedTime=impact.currentlyInfected*twoPowerFactor;
-    severeImpact.infectionsByRequestedTime=severeImpact.currentlyInfected*twoPowerFactor;
-    break;
-   case 'months':
-    twoPowerFactor=Math.pow(2,factorMonth);
-    impact.currentlyInfected=(reportedCases*convertMonthsToDays)*10;
-    severeImpact.currentlyInfected=(reportedCases*convertedMonthsToDays)*50;
-    impact.infectionsByRequestedTime=impact.currentlyInfected*twoPowerFactor;
-    severeImpact.infectionsByRequestedTime=severeImpact.currentlyInfected*twoPowerFactor;
-    break;
- }
+ const period =() => {
+   switch(input.periodType) {
+    case 'days':
+       periods=elapsedTime;
+       return periods;
+       break;
+    case 'weeks':
+      periods=elapsedTime*7;
+      return periods;
+      break;
+    case 'months':
+      periods=elapsedTime*30;
+      return periods;
+      break;  
+   }
+   period();
 
+  //calculating factor
+   const factor =() => {
+       factors=Math.trunc((elapsedTime/3));   
+       twoPowerFactor=Math.pow(2,factors);
+       return twoPowerFactor;
+   };
+   factor();
+
+   //Calculating Beds Space
+   const beds= ()=> {
+    availableBeds=Math.trunc((input.totalHospitalBeds*0.35));
+    return availableBeds;
+   };
+   beds();
+   //Calculating Estimates
+   const estimates =()=> {
+     impactCurrentlyInfected=input.reportedCases*10;
+     impactInfectionsByRequestedTime=impactCurrentlyInfected * factor();
+     severeCurrentlyInfected=input.reportedCases*50;
+     SevereInfectionsByRequestedTime=severeCurrentlyInfected*factor();
+   }
+
+ };
+ 
+ 
+ twoPowerFactor=Math.pow(2,factors);
  
 
  //Challenge 2
- severeCasesByRequestedTime=severeImpact.infectionsByRequestedTime*0.15;
- availableBeds=totalHospitalBeds*0.35;
+ severeCasesByRequestedTime=input.severeImpact.infectionsByRequestedTime*0.15;
+ availableBeds=input.totalHospitalBeds*0.35;
  hospitalBedsByRequestedTime=availableBeds-severeCasesByRequestedTime;
 
 
  // Challenge 3
-casesForICUByRequestedTime=severeImpact.infectionsByRequestedTime*0.05;
-casesForVentilatorsByRequestedTime=severeImpact.infectionsByRequestedTime*0.02;
-dollarsInFlight=severeImpact.infectionsByRequestedTime*region.avgDailyIncomePopulation*avgDailyIncomeInUSD*30;
+casesForICUByRequestedTime=input.severeImpact.infectionsByRequestedTime*0.05;
+casesForVentilatorsByRequestedTime=input.severeImpact.infectionsByRequestedTime*0.02;
+dollarsInFlight=(input.severeImpact.infectionsByRequestedTime*input.region.avgDailyIncomePopulation*input.avgDailyIncomeInUSD)/input.timeToElapse;
 
-
-return {
-  data: input,
+const output {
+  input,
+  impact: {
+    currentlyInfected: impactCurrentlyInfected,
+    infectionsByRequestedTime: impactInfectionsByRequestedTime
+  },
+  severeImpact: {
   severeCasesByRequestedTime,
   hospitalbedsByRequestTime,
-  severeImpact: {},
-  impact: {},
-  casesForICUByRequestedTime,
-  casesForVentilatorsByRequestedTime,
-  dollarsInFlight
-
-}
-
-};
+    severeImpact: {
+      currentlyInfected: severeCurrentlyInfected,
+      infectionsByRequestedTime: SevereInfectionsByRequestedTime
+    }
+    };
+    return output;
+  };
+ estimates();
 export default covid19ImpactEstimator;
