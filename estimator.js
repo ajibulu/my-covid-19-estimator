@@ -1,9 +1,9 @@
 const covid19ImpactEstimator = (data) => {
   const input = data;
   {
-      impact: {
-      currentlyInfected: input,
-      infectionsByRequestedTime: input
+    impact: {
+         currentlyInfected: input,
+         infectionsByRequestedTime: input
     region: {
       avgAge: input,
       avgDailyIncomeInUSD: input,
@@ -20,7 +20,7 @@ const covid19ImpactEstimator = (data) => {
     timeToElapse:  input,
     totalHospitalBeds: input
     }
-  } 
+   
   
  //********************Computation of Estimate
  var numberOfDays,numberOfWeeks,numberOfMonths;
