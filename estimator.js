@@ -1,6 +1,10 @@
 const covid19ImpactEstimator = (data) => {
 const input=data;
 input = {
+  impact: {
+    currentlyInfected:67,
+    infectionsByRequestedTime:34
+  },
 region: {
   name: 'Africa',
   avgAge: 19.7,
@@ -9,6 +13,10 @@ region: {
 },
 periodType: 'days',
 population: 58,
+severeImpact: {
+  currentlyInfected:23,
+  infectionsByRequestedTime: 56
+},
 reportedCases: 674,
 timeToElapse:  66622705,
 totalHospitalBeds: 1380614
