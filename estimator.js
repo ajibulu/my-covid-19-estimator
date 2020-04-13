@@ -1,11 +1,7 @@
 const covid19ImpactEstimator = (data) => {
 const input=data;
 input = {
-  impact: {
-    currentlyInfected:67,
-    infectionsByRequestedTime:34
-  },
-region: {
+  region: {
   name: 'Africa',
   avgAge: 19.7,
   avgDailyIncomeInUSD: 5,
@@ -13,15 +9,11 @@ region: {
 },
 periodType: 'days',
 population: 58,
-severeImpact: {
-  currentlyInfected:23,
-  infectionsByRequestedTime: 56
-},
 reportedCases: 674,
 timeToElapse:  66622705,
 totalHospitalBeds: 1380614
 };
-const elapsedTime,factors,twoPowerFactor,availableBeds,casesForICUByRequestedTime,casesForVentilatorsByRequestedTime;dollarsInFlight; 
+var elapsedTime,factors,twoPowerFactor,availableBeds,casesForICUByRequestedTime,casesForVentilatorsByRequestedTime,dollarsInFlight; 
 elapsedTime=input.timeToElapse;
 const period =() => {
    switch(input.periodType) {
@@ -73,6 +65,7 @@ const output= {
     };
   return output;
   estimates();
+  
  };
 };
 export default covid19ImpactEstimator;
