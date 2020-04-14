@@ -72,4 +72,4 @@ const output= {
     console.log(output);
   return output;
 };
-//export default covid19ImpactEstimator;
+export default covid19ImpactEstimator;
