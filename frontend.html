@@ -1,0 +1,203 @@
+<!DOCType Html>
+<html lang="en-US">
+    <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <Meta charset="UTF-8">
+    <title>Covid-19 Estimator Form</title>
+    <script src="estimator.js"></script>
+</head>
+<style>
+    body {
+        background:whitesmoke;
+        font-size:18px;
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+        line-height: 4px;
+        color:blue;
+    }
+    h1 {
+        font-size: 60px;
+        font-stretch: extra-expanded;
+        letter-spacing: 40px;
+     }
+    input, select {
+        width:80%;
+        height:25px ;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        background: none;
+    }
+    .main-content {
+        line-height: 20px;
+        padding:3%;
+        margin:9px;
+        height:95%;
+        width:80%;
+        border-radius:20px;
+        border-color: darkgoldenrod;
+        border-width: 5px;
+        background-color: lightgreen;
+        text-align: center;
+        color:blue;
+    }
+    .forms {
+        margin-left: 4%;
+        padding-left: 10%;
+        background-color:darkslategrey;
+        border-radius: 35px;
+        text-align: left;
+        column-count: 2;
+         -webkit-column-count: 2;
+         columns: 2;
+        -webkit-columns: 2;
+        color:whitesmoke;
+        height:70%;
+    }
+    #submit {
+        background-color:teal;
+        border:whitesmoke;
+        font-size: larger;
+        border-radius: 7px;
+    }
+</style>
+<body>
+    <h1>COVID-19</h1> 
+        <br><b>Impact Estimator App</b><br>
+        <center><div class="main-content">
+        <h2><u>Estimation Data Collection Form</u></h2>
+        <div class="forms"><br><span data-input></span>
+            <p><label>Region:<br><input type=text required data-region id="region" ></label>
+            <p><label>Age:<br><input type="number" required data-age id="age" min=0></label>
+            <p><label>Daily Income in US:<br><input type="number" required data-income id="diis" min=0></label>
+            <p><label>Population:<br><input type="number" required data-population id='pops' min=0></label>
+            <p><label>Time to Elapse:<br> <input type="number" required data-time-to-elapse min=0 id="timeElap"></label>
+            <p><label>Reported Cases:<br><input type="number" required data-reported-cases min=0 max=10 id="rCases"></label>
+            <p><label>Total Hospital Beds:<br><input type="number" required data-total-hospital-beds min=0 id="hospBeds"></label>
+            <p><label>Period Type:<br><select id="peType" data-period-type>
+                <option default>Choose from dropdown</option>
+                <option value="days">Days</option>
+                <option value="weeks">Weeks</option>
+                <option value="months">Months</option>
+                </select>
+                </label>
+            </span>
+            <span data-estimate>
+                <p><h5>*********Impact Cases</h5></p>
+                <p><label>Currently Infected:</label><br><label id="impactCurInfected">0</label></p>
+                <p><label>Infections By Requested Time:</label><br><label id="impactInfByReqTime">0</label></p>
+                <p><label>Cases By Requested Time:</label><br><label  data-impact-scbrt id="impactCasesByReqTime">0</label></p>
+                <p><label>Hospital Beds:</label><br><label data-impact-hbrt id="impacthospBedsByReqTime">0</label></p>
+                <p><label>Cases for ICU :</label><br><label data-impact-cicurt id="impactcasesICUByReqTime">0</label></p>
+                <p><label>Cases for Ventilator:</label><br><label data-impact-cicurt id="impactcasesVentByReqTime">0</label></p>
+                <p><label>Dollars in Flight:</label><br><label data-impact-dif id="impactdInFlight">0</label></p>
+                <p><h5>*****Severe Impact Cases********</h5></p>
+                <p><label>Currently Infected:</label><br><label data-severe-impact-ci id="sevImpCurInfected">0</label></p>
+                <p><label>Infections By Requested Time:</label><br><label  data-severe-impact-ibrt id="sevImpByReqTime">0</label></p>
+                <p><label>Cases By Requested Time:</label><br><label  data-severe-impact-scbrt id="sevCasesByReqTime">0</label></p>
+                <p><label>Hospital Beds:</label><br><label data-severe-impact-hbrt id="hospBedsByReqTime">0</label></p>
+                <p><label>Cases for Ventilator:</label><br><label data-severe-impact-cicurt id="casesVentByReqTime">0</label></p>
+                <p><label>Cases for ICU :</label><br><label data-severe-impact-cicurt id="casesICUByReqTime">0</label></p>
+                <p><label>Dollars in Flight:</label><br><label data-severe-impact-dif id="dInFlight">0</label></p>
+            </span></div>
+            <p><input type="submit" value="Go Estimate" id="submit" data-go-estimate >
+            </center>
+        
+    
+</body>
+<script>
+    var button=document.querySelector("#submit");
+    button.addEventListener("click",() => { 
+    
+ var twoPowerNine,hospitalbedsByRequestedTime,availableBeds,casesForICUByRequestedTime,casesForVentilatorsByRequestedTime,dollarsInFlight; 
+ //passing UI values to elements
+ const avgAge=document.getElementById('age').value;
+ const regionname=document.getElementById('region').value;
+ const avgDailyIncomeInUSD=document.getElementById('diis').value;
+ avgDailyIncomeInPopulation=document.getElementById('pops').value;
+ const timeToElapse=document.getElementById('timeElap').value;
+ const totalHospitalBeds=document.getElementById('hospBeds').value;
+ const periodType=document.getElementById('peType').value;
+ const reportedCases=document.getElementById('rCases').value;
+ 
+ var impactCurInfected=document.querySelector("#impactCurInfected");
+  var impactByReqTime=document.querySelector("#impactInfByReqTime");
+ var impactCasesByReqTime=document.querySelector("#impactCasesByReqTime");
+ var impacthospBedByReqTime=document.querySelector("#impacthospBedsByReqTime");
+ var impactVentilator=document.querySelector('#impactcasesVentByReqTime')
+ var impactcasesICUByReqTime=document.querySelector('#impactcasesICUByReqTime');
+ var impactdollar=document.querySelector('#impactdInFlight');
+ var sevImpCurInfected=document.querySelector("#sevImpCurInfected");
+ var sevImpByReqTime=document.querySelector("#sevImpByReqTime");
+ var sevCasesByReqTime=document.querySelector("#sevCasesByReqTime");
+ var hospBeds=document.querySelector("#hospBedsByReqTime");
+ var severeICU=document.querySelector('#casesICUByReqTime');
+ var severeVentilator=document.querySelector('#casesVentByReqTime');
+ var severedollar=document.querySelector('#dInFlight');
+ const input = {
+  region: {
+  name: regionname,
+  avgAge: avgAge,
+  avgDailyIncomeInUSD:avgDailyIncomeInUSD,
+  avgDailyIncomePopulation: avgDailyIncomeInPopulation,
+},
+periodType:periodType ,
+population:pops,
+reportedCases: reportedCases,
+timeToElapse: timeToElapse ,
+totalHospitalBeds: totalHospitalBeds
+ };
+ covid19ImpactEstimator(input);
+ impactCurInfected.textContent=
+
+ //var convertWeeksToDays,convertMonthsToDays,factorDay,factorWeek,factorMonth;
+/*result = {
+    input,
+   impact: {
+    currentlyInfected: impactCurInfected,
+    infectionsByRequestedTime: impactByReqTime,
+    casesByRequestedTime:impactCasesByReqTime,
+    hospitalBedsByRequestedTime:impacthospBedByReqTime,
+    casesForICUReequestedTime: impactcasesICUByReqTime,
+    casesForVentilatorByRequestedTime:impactVentilators,
+    dollasInflight:impactdollar
+  },
+  severeImpact: {
+      currentlyInfected: severeCurrentlyInfected,
+      infectionsByRequestedTime: severeInfectionsByRequestedTime,
+      casesByRequestedTime: severeCasesByRequestedTime,
+      hospitalBedsByRequestedTime:hosBed,
+      casesForICUReequestedTime:severeICU ,
+      casesForVentilatorByRequestedTime:severeVentilator,
+      dollasInflight: severedollar
+  }
+
+ }
+ /*
+ var impactcurrentlyInfected=r
+ let severeImpactcurrentlyInfected=reportedCases*50;
+ let impactinfectionsByRequestedTime=impactcurrentlyInfected*twoPowerFactor;
+ severeImpactinfectionsByRequestedTime=severeImpactcurrentlyInfected*twoPowerFactor;
+ impactCurInfected.textContent=impactcurrentlyInfected;
+ impactByReqTime.textContent=impactinfectionsByRequestedTime;
+ sevImpCurInfected.textContent=severeImpactcurrentlyInfected
+ sevImpByReqTime.textContent=severeImpactinfectionsByRequestedTime;
+ severeCasesByRequestedTime=severeImpactinfectionsByRequestedTime*0.15;
+ availableBeds=totalHospitalBeds*0.35;
+ hospitalBedsByRequestedTime=availableBeds-severeCasesByRequestedTime;
+
+sevCasesByReqTime.textContent=severeCasesByRequestedTime;
+hospBedByReqTime.textContent=hospitalbedsByRequestedTime;
+
+casesForICUByRequestedTime=severeImpactinfectionsByRequestedTime*0.05;
+casesForVentilatorsByRequestedTime=severeImpactinfectionsByRequestedTime*0.02;
+dollarsInFlight=severeImpactinfectionsByRequestedTime*0.65*1.5*30;
+
+casesICUByReqTime.textContent=casesForICUByRequestedTime;
+casesICUByReqTime.textContent=casesForICUByRequestedTime;
+dollarInFlight.textContent=dollarsInFlight;
+
+
+//export default covid19ImpactEstimator;
+    });
+</script> */
